@@ -1,5 +1,27 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { AUTH_COOKIE_NAME, parseAuthCookie } from "@/lib/auth-shared";
+
+const AUTH_COOKIE_NAME = "forms_auth";
+
+function parseAuthCookie(
+  raw: string | undefined,
+): { email: string; role: "individual" | "admin" } | null {
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as {
+      email?: string;
+      role?: string;
+    };
+    if (
+      !parsed.email ||
+      (parsed.role !== "individual" && parsed.role !== "admin")
+    ) {
+      return null;
+    }
+    return { email: parsed.email, role: parsed.role };
+  } catch {
+    return null;
+  }
+}
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
