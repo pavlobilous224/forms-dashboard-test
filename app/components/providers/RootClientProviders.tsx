@@ -3,7 +3,7 @@
 import { ReactNode, useEffect } from "react";
 import { ToastProvider } from "./ToastProvider";
 import { useAuthStore } from "@/store/useAuthStore";
-import type { AuthSession } from "@/lib/auth";
+import type { AuthSession } from "@/lib/auth-shared";
 
 interface RootClientProvidersProps {
   initialSession: AuthSession | null;

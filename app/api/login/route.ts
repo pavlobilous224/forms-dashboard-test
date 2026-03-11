@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { AUTH_COOKIE_NAME, type AuthSession } from "@/lib/auth";
+import { AUTH_COOKIE_NAME, type AuthSession } from "@/lib/auth-shared";
 import { loginSchema } from "@/lib/schemas";
 
 export async function POST(request: Request) {

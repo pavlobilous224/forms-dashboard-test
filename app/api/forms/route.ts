@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getForms, createForm, ValidationError } from "@/lib/forms-repository";
 import { formSchema } from "@/lib/schemas";
-import { getServerSession } from "@/lib/auth";
+import { getServerSession } from "@/lib/server-auth";
 
 export async function GET() {
   try {

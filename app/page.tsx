@@ -1,4 +1,4 @@
-import { getServerSession } from '@/lib/auth';
+import { getServerSession } from "@/lib/server-auth";
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';

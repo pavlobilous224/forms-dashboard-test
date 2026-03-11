@@ -1,6 +1,6 @@
 import { UserMenu } from "@/app/components/layout/UserMenu";
 import { RootClientProviders } from "@/app/components/providers/RootClientProviders";
-import { getServerSession } from "@/lib/auth";
+import { getServerSession } from "@/lib/server-auth";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";

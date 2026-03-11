@@ -6,9 +6,6 @@ import {
   type AuthSession,
 } from "./auth-shared";
 
-export { AUTH_COOKIE_NAME, parseAuthCookie };
-export type { AuthSession };
-
 export async function getServerSession(): Promise<AuthSession | null> {
   const store = await cookies();
   const raw = store.get(AUTH_COOKIE_NAME)?.value;
@@ -24,4 +21,6 @@ export function hasAtLeastRole(
   return session.role === "admin";
 }
 
+export type { AuthSession };
+export { AUTH_COOKIE_NAME };
 

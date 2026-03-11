@@ -8,7 +8,7 @@ import {
   StorageError,
 } from "@/lib/forms-repository";
 import { formSchema } from "@/lib/schemas";
-import { getServerSession } from "@/lib/auth";
+import { getServerSession } from "@/lib/server-auth";
 
 interface RouteContext {
   params: Promise<{
