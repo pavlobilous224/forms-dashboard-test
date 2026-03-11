@@ -1,25 +1,13 @@
 import { cookies } from "next/headers";
 import type { Role } from "./types";
+import {
+  AUTH_COOKIE_NAME,
+  parseAuthCookie,
+  type AuthSession,
+} from "./auth-shared";
 
-export const AUTH_COOKIE_NAME = "forms_auth";
-
-export interface AuthSession {
-  email: string;
-  role: Role;
-}
-
-export function parseAuthCookie(raw: string | undefined): AuthSession | null {
-  if (!raw) return null;
-  try {
-    const parsed = JSON.parse(raw) as AuthSession;
-    if (!parsed.email || (parsed.role !== "individual" && parsed.role !== "admin")) {
-      return null;
-    }
-    return parsed;
-  } catch {
-    return null;
-  }
-}
+export { AUTH_COOKIE_NAME, parseAuthCookie };
+export type { AuthSession };
 
 export async function getServerSession(): Promise<AuthSession | null> {
   const store = await cookies();

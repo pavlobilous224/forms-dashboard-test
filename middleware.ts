@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { AUTH_COOKIE_NAME, parseAuthCookie } from "@/lib/auth";
+import { AUTH_COOKIE_NAME, parseAuthCookie } from "@/lib/auth-shared";
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
