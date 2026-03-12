@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { UserMenu } from "@/app/components/layout/UserMenu";
 import { RootClientProviders } from "@/app/components/providers/RootClientProviders";
 import { getServerSession } from "@/lib/server-auth";
@@ -37,12 +38,9 @@ export default async function RootLayout({
           <div className="flex min-h-screen flex-col">
             <header className="border-b bg-white/80 backdrop-blur dark:bg-black/60">
               <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-2 px-4 py-3 sm:flex-nowrap sm:gap-4">
-                <a
-                  href="/"
-                  className="text-sm font-semibold tracking-tight"
-                >
+                <Link href="/" className="text-sm font-semibold tracking-tight">
                   Forms Dashboard
-                </a>
+                </Link>
                 <UserMenu />
               </div>
             </header>

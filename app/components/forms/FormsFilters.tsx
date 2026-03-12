@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { Form } from "@/lib/types";
 import { formStatusValues } from "@/lib/types";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -88,12 +89,12 @@ export function FormsFilters({
           </button>
         )}
         {role === "admin" && (
-          <a
+          <Link
             href="/forms/new"
             className="inline-flex items-center justify-center rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-zinc-50 shadow-sm transition hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200"
           >
             New form
-          </a>
+          </Link>
         )}
       </div>
     </div>

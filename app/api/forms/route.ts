@@ -7,7 +7,7 @@ export async function GET() {
   try {
     const forms = await getForms();
     return NextResponse.json({ data: forms });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: "Failed to load forms" },
       { status: 500 },
