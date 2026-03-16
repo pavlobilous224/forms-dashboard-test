@@ -1,23 +1,5 @@
 [
   {
-    "title": "Customer Feedback Survey",
-    "description": "Collect feedback from customers about their recent experience.",
-    "fieldsCount": 10,
-    "status": "active",
-    "id": "form-1",
-    "createdAt": "2025-12-01T10:00:00.000Z",
-    "updatedAt": "2026-03-11T16:08:45.669Z"
-  },
-  {
-    "title": "New Employee Onboarding",
-    "description": "Internal form for onboarding new employees.",
-    "fieldsCount": 25,
-    "status": "draft",
-    "id": "form-2",
-    "createdAt": "2025-11-15T08:15:00.000Z",
-    "updatedAt": "2026-01-05T14:45:00.000Z"
-  },
-  {
     "title": "Event Registration",
     "description": "Registration form for upcoming marketing events.",
     "fieldsCount": 15,

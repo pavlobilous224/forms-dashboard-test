@@ -6,6 +6,11 @@ import type { Form } from "./types";
 import { formSchema, type FormInput } from "./schemas";
 
 const FORMS_FILE_PATH = path.join(process.cwd(), "data", "forms.json");
+const isReadOnlyFs =
+  process.env.VERCEL === "1" || process.env.NODE_ENV === "production";
+
+let inMemoryForms: Form[] | null = null;
+let useInMemoryStore = false;
 
 const formRecordSchema = formSchema.extend({
   id: z.string(),
@@ -37,10 +42,23 @@ export class StorageError extends Error {
 }
 
 async function readFormsFromFile(): Promise<Form[]> {
+  if (useInMemoryStore && inMemoryForms) {
+    return [...inMemoryForms].sort(
+      (a, b) =>
+        new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+    );
+  }
+
   try {
     const fileContents = await fs.readFile(FORMS_FILE_PATH, "utf8");
     const parsed = JSON.parse(fileContents);
     const result = formListSchema.parse(parsed);
+
+    if (isReadOnlyFs) {
+      inMemoryForms = result;
+      useInMemoryStore = true;
+    }
+
     return result.sort(
       (a, b) =>
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
@@ -54,10 +72,23 @@ async function readFormsFromFile(): Promise<Form[]> {
 }
 
 async function writeFormsToFile(forms: Form[]): Promise<void> {
+  if (useInMemoryStore || isReadOnlyFs) {
+    inMemoryForms = forms;
+    useInMemoryStore = true;
+    return;
+  }
+
   try {
     const data = JSON.stringify(forms, null, 2);
     await fs.writeFile(FORMS_FILE_PATH, data, "utf8");
-  } catch {
+  } catch (error) {
+    const maybeErr = error as NodeJS.ErrnoException;
+    if (maybeErr && maybeErr.code === "EROFS") {
+      inMemoryForms = forms;
+      useInMemoryStore = true;
+      return;
+    }
+
     throw new StorageError("Failed to write forms to storage");
   }
 }
