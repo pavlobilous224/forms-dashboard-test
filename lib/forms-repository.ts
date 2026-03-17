@@ -6,11 +6,8 @@ import type { Form } from "./types";
 import { formSchema, type FormInput } from "./schemas";
 
 const FORMS_FILE_PATH = path.join(process.cwd(), "data", "forms.json");
-const isReadOnlyFs =
-  process.env.VERCEL === "1" || process.env.NODE_ENV === "production";
 
 let inMemoryForms: Form[] | null = null;
-let useInMemoryStore = false;
 
 const formRecordSchema = formSchema.extend({
   id: z.string(),
@@ -27,22 +24,11 @@ export class NotFoundError extends Error {
   }
 }
 
-export class ValidationError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "ValidationError";
-  }
-}
-
-export class StorageError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "StorageError";
-  }
-}
-
+// TODO: swap this JSON file storage for a real database if the project grows
 async function readFormsFromFile(): Promise<Form[]> {
-  if (useInMemoryStore && inMemoryForms) {
+  // If we ever fail to write on a read-only deployment (e.g. Vercel),
+  // we fall back to an in-memory store for the lifetime of that server instance.
+  if (inMemoryForms) {
     return [...inMemoryForms].sort(
       (a, b) =>
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
@@ -54,42 +40,30 @@ async function readFormsFromFile(): Promise<Form[]> {
     const parsed = JSON.parse(fileContents);
     const result = formListSchema.parse(parsed);
 
-    if (isReadOnlyFs) {
-      inMemoryForms = result;
-      useInMemoryStore = true;
-    }
-
     return result.sort(
       (a, b) =>
         new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
     );
   } catch (error) {
     if (error instanceof z.ZodError) {
-      throw new ValidationError("Stored forms data is invalid");
+      throw new Error("Stored forms data is invalid");
     }
-    throw new StorageError("Failed to read forms from storage");
+    throw new Error("Failed to read forms from storage");
   }
 }
 
 async function writeFormsToFile(forms: Form[]): Promise<void> {
-  if (useInMemoryStore || isReadOnlyFs) {
-    inMemoryForms = forms;
-    useInMemoryStore = true;
-    return;
-  }
-
   try {
     const data = JSON.stringify(forms, null, 2);
     await fs.writeFile(FORMS_FILE_PATH, data, "utf8");
   } catch (error) {
     const maybeErr = error as NodeJS.ErrnoException;
-    if (maybeErr && maybeErr.code === "EROFS") {
+    if (maybeErr && (maybeErr.code === "EROFS" || maybeErr.code === "EPERM")) {
       inMemoryForms = forms;
-      useInMemoryStore = true;
       return;
     }
 
-    throw new StorageError("Failed to write forms to storage");
+    throw new Error("Failed to write forms to storage");
   }
 }
 

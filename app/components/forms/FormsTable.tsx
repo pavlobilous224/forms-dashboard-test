@@ -28,6 +28,7 @@ export function FormsTable({
   const statusFilter = searchParams.get("status") ?? "all";
   const selectAllRef = useRef<HTMLInputElement>(null);
 
+  // TODO: consider moving this filtering to the server once there are many forms
   const filtered = useMemo(() => {
     if (statusFilter === "all") return forms;
     return forms.filter((form) => form.status === statusFilter);
@@ -42,6 +43,7 @@ export function FormsTable({
     el.indeterminate = some && !all;
   }, [filtered, selectedIds]);
 
+  // TODO: show a nicer confirmation dialog instead of window.confirm
   async function handleDelete(id: string) {
     const confirmed = window.confirm("Are you sure you want to delete this form?");
     if (!confirmed) return;
@@ -70,7 +72,7 @@ export function FormsTable({
     } catch {
       addToast({
         type: "error",
-        message: "Something went wrong. Please try again.",
+        message: "Oops, couldn't delete this form. Try again in a bit.",
       });
     }
   }

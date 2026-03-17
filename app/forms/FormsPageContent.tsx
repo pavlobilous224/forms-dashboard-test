@@ -20,6 +20,7 @@ export function FormsPageContent({ forms }: FormsPageContentProps) {
   const { selectedIds, toggleSelection, selectAll, clearSelection } =
     useFormSelection();
 
+  // TODO: move heavy CSV exports to a backend endpoint if the list grows a lot
   const handleExportSelected = useCallback(() => {
     const toExport = forms.filter((form) => selectedIds.has(form.id));
     if (toExport.length === 0) return;
@@ -34,6 +35,7 @@ export function FormsPageContent({ forms }: FormsPageContentProps) {
     URL.revokeObjectURL(url);
   }, [forms, selectedIds]);
 
+  // TODO: replace window.confirm with a custom modal to match the rest of the UI
   const handleDeleteSelected = useCallback(async () => {
     if (selectedIds.size === 0) return;
     const confirmed = window.confirm(
@@ -76,7 +78,7 @@ export function FormsPageContent({ forms }: FormsPageContentProps) {
     } catch {
       addToast({
         type: "error",
-        message: "Something went wrong. Please try again.",
+        message: "Oops, couldn't delete all selected forms. Try again in a bit.",
       });
     }
   }, [addToast, clearSelection, router, selectedIds, startTransition]);

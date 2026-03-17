@@ -4,8 +4,6 @@ import {
   updateForm,
   deleteForm,
   NotFoundError,
-  ValidationError,
-  StorageError,
 } from "@/lib/forms-repository";
 import { formSchema } from "@/lib/schemas";
 import { getServerSession } from "@/lib/server-auth";
@@ -53,7 +51,7 @@ export async function PUT(request: Request, context: RouteContext) {
     if (error instanceof NotFoundError) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
-    if (error instanceof ValidationError) {
+    if (error instanceof Error && error.name === "ZodError") {
       return NextResponse.json(
         { error: "Validation failed" },
         { status: 400 },
@@ -84,12 +82,6 @@ export async function DELETE(_request: Request, context: RouteContext) {
   } catch (error) {
     if (error instanceof NotFoundError) {
       return NextResponse.json({ error: "Not found" }, { status: 404 });
-    }
-    if (error instanceof StorageError) {
-      return NextResponse.json(
-        { error: "Storage error. Please try again." },
-        { status: 503 },
-      );
     }
     return NextResponse.json(
       { error: "Failed to delete form" },

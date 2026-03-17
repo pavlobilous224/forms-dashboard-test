@@ -1,14 +1,5 @@
 [
   {
-    "title": "Onboarding Form",
-    "description": "Form for onboarding new employees.",
-    "fieldsCount": 10,
-    "status": "active",
-    "id": "form-1",
-    "createdAt": "2025-11-15T08:15:00.000Z",
-    "updatedAt": "2026-01-05T14:45:00.000Z"
-  },
-  {
     "title": "New Employee Onboarding",
     "description": "Internal form for onboarding new employees.",
     "fieldsCount": 25,

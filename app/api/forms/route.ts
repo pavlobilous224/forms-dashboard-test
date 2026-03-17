@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getForms, createForm, ValidationError } from "@/lib/forms-repository";
+import { getForms, createForm } from "@/lib/forms-repository";
 import { formSchema } from "@/lib/schemas";
 import { getServerSession } from "@/lib/server-auth";
 
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     const created = await createForm(parsed);
     return NextResponse.json({ data: created }, { status: 201 });
   } catch (error) {
-    if (error instanceof ValidationError) {
+    if (error instanceof Error && error.name === "ZodError") {
       return NextResponse.json(
         { error: "Validation failed" },
         { status: 400 },
